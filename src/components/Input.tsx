@@ -8,17 +8,16 @@ interface Props{
 import { useRecoilState}from 'recoil'
 import {codeList} from '../data/codeList'
 import { countryCodeState } from "../atom/countryCode"
+import { phoneNumberState } from "../atom/phoneNumber"
 const Input:React.FunctionComponent<Props> =props=>{
  const [countryCode,setCountryCode]=useRecoilState(countryCodeState)
+ const [phoneNumber,setPhoneNumber]=useRecoilState(phoneNumberState)
  const [valid,setValid]=useState<boolean>(false)
  const ref=useRef<HTMLInputElement>(null)
- const onchange=()=>{
-   if(ref.current.value.length<5){
-   setValid(false)
-   }
-   else {
-   setValid(true)
-   }
+ const onblur=e=>setPhoneNumber(e.target.value)
+ const oninput=e=>{
+ if(e.target.value.length<5) setValid(false)
+ else setValid(true)
  }
  return (
   <nav className='level is-mobile'>
@@ -32,18 +31,22 @@ const Input:React.FunctionComponent<Props> =props=>{
     onClick={()=>{
       setCountryCode(el.code)
     }}>
-    +({el.code})- {el.name}
-      </a>)
+    (+{el.code})
+    </a>
       )
-    }
+      )
+      }
+
     </Dropdown>
     <input
      className={`input ${valid?'is-primary':'is-danger'}`}
      type={props.type} 
      placeholder={props.placeholder}
      ref={ref}
-     onChange={onchange}
+     onBlur={onblur}
+     onInput={oninput}
      />
+     
    </div>
   </nav>
  )

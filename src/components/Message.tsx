@@ -1,12 +1,12 @@
-import { useRef, useState } from "react"
+import { useState } from "react"
 import 'bulma/css/bulma.min.css'
+import {useRecoilState} from 'recoil'
 const Message:React.FC = ()=>{
   const [message,setMessage]=useState('')
-  const textRef =useRef<HTMLTextAreaElement|null>(null)
   const send=()=>{
-  const pesan=textRef.current?.value
+  const pesan=message
   let url='https://api.whatsapp.com/send/?phone=6285927778963'
-  if(pesan) {
+  if(pesan.length>1) {
   url+=`&text=${pesan}`
   }
     location.assign(url)
@@ -15,7 +15,9 @@ const Message:React.FC = ()=>{
   <>
    <textarea 
    className="textarea is-primary" 
-   placeholder="Send message here..."></textarea>
+   placeholder="Send message here..."
+   onChange={(e)=>setMessage(e.target.value)}
+   ></textarea>
    <button 
    className='button is-primary'
    onClick={send}>Send message</button>
