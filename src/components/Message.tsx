@@ -1,5 +1,5 @@
 import { useRef, useState } from "react"
-
+import 'bulma/css/bulma.min.css'
 const Message:React.FC = ()=>{
   const [message,setMessage]=useState('')
   const textRef =useRef<HTMLTextAreaElement|null>(null)
@@ -13,8 +13,12 @@ const Message:React.FC = ()=>{
   }
   return (
   <>
-   <textarea ref={textRef}></textarea>
-   <button onClick={send}>Send message</button>
+   <textarea 
+   className="textarea is-primary" 
+   placeholder="Send message here..."></textarea>
+   <button 
+   className='button is-primary'
+   onClick={send}>Send message</button>
   </>
   )
 }

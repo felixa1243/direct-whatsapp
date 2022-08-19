@@ -1,28 +1,51 @@
 import {useState,useRef} from 'react'
-import './Input.css'
+import 'bulma/css/bulma.min.css'
+import Dropdown from "./Dropdown"
 interface Props{
  type:'text'|'number';
  placeholder:string;
 }
-type phoneNum='62'|'86'
+import { useRecoilState}from 'recoil'
+import {codeList} from '../data/codeList'
+import { countryCodeState } from "../atom/countryCode"
 const Input:React.FunctionComponent<Props> =props=>{
- const [country,setCountry]=useState<phoneNum>('62')
+ const [countryCode,setCountryCode]=useRecoilState(countryCodeState)
+ const [valid,setValid]=useState<boolean>(false)
  const ref=useRef<HTMLInputElement>(null)
- const redirect=()=>{
-  const url=`https://wa.me/${country}${ref.current?.value}`
-  location.assign(url)
+ const onchange=()=>{
+   if(ref.current.value.length<5){
+   setValid(false)
+   }
+   else {
+   setValid(true)
+   }
  }
  return (
- <>
-  <input 
-  type={props.type} 
-  placeholder={props.placeholder}
-  ref={ref}/>
-  <button 
-  type='button' 
-  onClick={redirect}
-  >Send message!</button>
- </>
+  <nav className='level is-mobile'>
+   <div className='level-item'>
+      <Dropdown>
+    {
+    codeList.map(
+    el=>(<a 
+    href="#" 
+    className="dropdown-item"
+    onClick={()=>{
+      setCountryCode(el.code)
+    }}>
+    +({el.code})- {el.name}
+      </a>)
+      )
+    }
+    </Dropdown>
+    <input
+     className={`input ${valid?'is-primary':'is-danger'}`}
+     type={props.type} 
+     placeholder={props.placeholder}
+     ref={ref}
+     onChange={onchange}
+     />
+   </div>
+  </nav>
  )
 }
 export default Input 

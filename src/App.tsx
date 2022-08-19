@@ -1,36 +1,21 @@
-import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import Input from './components/Input'
-import Dropdown from './components/Dropdown'
 import Message from "./components/Message"
-function App() {
-  const [count, setCount] = useState(0)
-  return (
-    <div className="App">
-       <Dropdown />
-      <Input type={'text'} placeholder={'Enter phone number here'} />
+import 'bulma/css/bulma.min.css'
+import {useRecoilState} from 'recoil'
+import { countryCodeState } from "./atom/countryCode"
 
+function App() {
+ const [countrycode,setCountryCode]=useRecoilState(countryCodeState)
+  return (
+    <div className="container px-2">
+    
+      <h1 className='is-size-5'>Send message without ever saving a new number...</h1>
+     <img src={reactLogo} 
+     className='image'/>
+     <p>{countrycode}</p>
+      <Input type={'text'} placeholder={'Enter phone number here'} />
       <Message/>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </div>
   )
 }
