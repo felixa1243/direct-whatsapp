@@ -8,6 +8,7 @@ interface Props{
 import { useRecoilState}from 'recoil'
 import { countryCodeState } from "../atom/countryCode"
 import { phoneNumberState } from "../atom/phoneNumber"
+import { loadMore } from '../atom/loadMore'
 import data from '../data/countryList.json'
 import { dropdownState } from "../atom/dropdown"
 import { searchState } from "../atom/searchState"
@@ -18,6 +19,8 @@ const Input:React.FunctionComponent<Props> =props=>{
  const [,setActive]=useRecoilState(dropdownState)
  const [valid,setValid]=useState<boolean>(false)
  const [list]=useRecoilState(searchState)
+ const [load]=useRecoilState(loadMore)
+
  const ref=useRef<HTMLInputElement>(null)
  const onblur=(e:React.FocusEvent<HTMLInputElement>)=>setPhoneNumber(e.target.value)
  const onchange=(e:React.ChangeEvent<HTMLInputElement>)=>{
@@ -34,7 +37,7 @@ const Input:React.FunctionComponent<Props> =props=>{
    <div className='level-item'>
       <Dropdown>
     {
-    list.slice(0,10).map(
+    list.slice(0,load).map(
     e=>(<a 
     href="#" 
     className="dropdown-item"
@@ -51,7 +54,7 @@ const Input:React.FunctionComponent<Props> =props=>{
 
     </Dropdown>
     <input
-     className={`input ${valid?'is-primary':'is-danger'}`}
+     className={`input ${valid?'is-primary':'is-danger'} ml-3`}
      type={props.type} 
      placeholder={props.placeholder}
      ref={ref}

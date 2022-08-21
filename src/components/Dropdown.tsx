@@ -2,17 +2,14 @@ import 'bulma/css/bulma.min.css'
 import {useRecoilState} from 'recoil'
 import { countryCodeState } from "../atom/countryCode"
 import { dropdownState } from "../atom/dropdown"
-import { searchState } from "../atom/searchState"
-import {useState} from 'react'
+import { loadMore } from "../atom/loadMore"
 interface Props {
  children:React.ReactNode
 }
 const Dropdown:React.FC <Props>= ({children})=>{
   const [active,setActive]=useRecoilState(dropdownState)
   const [countrycode]=useRecoilState(countryCodeState)
-  const [search,setSearch]=useRecoilState(searchState)
-  const [available,setAvailable]=useState({})
-
+  const [load,setLoad]=useRecoilState(loadMore)
   return (
    <div 
    className={`dropdown ${active?'is-active':''}`}
@@ -23,7 +20,12 @@ const Dropdown:React.FC <Props>= ({children})=>{
     aria-haspopup="true" 
     aria-controls="dropdown-menu"
     aria-expanded={active}
-    onClick={()=>setActive(!active)}
+    onClick={()=>{
+    setActive(!active)
+    if(!active){
+      setLoad(10)
+    }
+    }}
     
     >
       <span>+{countrycode}</span>
@@ -46,9 +48,7 @@ const Dropdown:React.FC <Props>= ({children})=>{
           type="text" 
           placeholder="Find country" 
           className="input is-transparent"
-          onChange={(e)=>
-            setSearch(search.filter(el=>el.code===e.target.value||el.name===e.target.value))
-          }
+          disabled
           />
           <span className="icon is-left">
           </span>
@@ -56,6 +56,16 @@ const Dropdown:React.FC <Props>= ({children})=>{
       </div>
       <hr className="dropdown-divider"/>
      {children}
+     <hr className="dropdown-divider"/>
+     <a 
+     href="" 
+     className="mx-2"
+     onClick={(e)=>{
+     e.preventDefault()
+     setLoad(load+10)
+     }
+     }>Load more...</a>
+    
     </div>
   </div>
 </div>

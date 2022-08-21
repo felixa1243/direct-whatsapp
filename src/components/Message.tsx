@@ -13,13 +13,17 @@ const Message:React.FC = ()=>{
   if(pesan.length>0) {
   url+=`&text=${pesan}`
   }
+  if(phoneNumber.length<1) {
+    alert('phone number is required!')
+  } else {
     location.assign(url)
+    }
   }
   return (
   <>
    <textarea 
-   className="textarea is-primary" 
-   placeholder="Send message here..."
+   className="textarea is-primary my-3" 
+   placeholder="Send message here... (optional)"
    onChange={(e)=>setMessage(e.target.value)}
    ></textarea>
    <button 
