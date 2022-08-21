@@ -6,32 +6,44 @@ interface Props{
  placeholder:string;
 }
 import { useRecoilState}from 'recoil'
-import {codeList} from '../data/codeList'
 import { countryCodeState } from "../atom/countryCode"
 import { phoneNumberState } from "../atom/phoneNumber"
+import data from '../data/countryList.json'
+import { dropdownState } from "../atom/dropdown"
+import { searchState } from "../atom/searchState"
+
 const Input:React.FunctionComponent<Props> =props=>{
- const [countryCode,setCountryCode]=useRecoilState(countryCodeState)
- const [phoneNumber,setPhoneNumber]=useRecoilState(phoneNumberState)
+ const [,setCountryCode]=useRecoilState(countryCodeState)
+ const [,setPhoneNumber]=useRecoilState(phoneNumberState)
+ const [,setActive]=useRecoilState(dropdownState)
  const [valid,setValid]=useState<boolean>(false)
+ const [list]=useRecoilState(searchState)
  const ref=useRef<HTMLInputElement>(null)
- const onblur=e=>setPhoneNumber(e.target.value)
- const oninput=e=>{
- if(e.target.value.length<5) setValid(false)
- else setValid(true)
+ const onblur=(e:React.FocusEvent<HTMLInputElement>)=>setPhoneNumber(e.target.value)
+ const onchange=(e:React.ChangeEvent<HTMLInputElement>)=>{
+ if(e.target?.value.length<5) {
+  setValid(false)
+  setActive(false)
+ }
+ else {
+   setValid(true)
+ }
  }
  return (
   <nav className='level is-mobile'>
    <div className='level-item'>
       <Dropdown>
     {
-    codeList.map(
-    el=>(<a 
+    list.slice(0,10).map(
+    e=>(<a 
     href="#" 
     className="dropdown-item"
+    key={e.code}
     onClick={()=>{
-      setCountryCode(el.code)
+      setCountryCode(e.dial_code.substring(1))
+      setActive(false)
     }}>
-    (+{el.code})
+    ({e.dial_code}){e.code}
     </a>
       )
       )
@@ -44,7 +56,7 @@ const Input:React.FunctionComponent<Props> =props=>{
      placeholder={props.placeholder}
      ref={ref}
      onBlur={onblur}
-     onInput={oninput}
+     onChange={onchange}
      />
      
    </div>
